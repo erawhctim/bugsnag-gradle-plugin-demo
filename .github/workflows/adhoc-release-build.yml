@@ -1,0 +1,26 @@
+name: Create ad-hoc release build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - uses: actions/checkout@v4
+
+      - name: Upload mapping symbols
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: bugsnagUploadReleaseBundle
+
+      - name: Assemble release APK
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: assembleRelease
